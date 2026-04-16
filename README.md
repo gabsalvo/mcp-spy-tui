@@ -4,7 +4,7 @@
 > Intercept, inspect, and debug MCP traffic in real time — straight from your terminal.
 
 <!-- SCREENSHOT: run `npx mcp-spy` with no args — shows the welcome/pricing TUI with the big ASCII banner -->
-![MCP-SPY Welcome Screen](./docs/screenshot-welcome.png)
+![MCP-SPY Welcome Screen](https://raw.githubusercontent.com/gabsalvo/mcp-spy-tui/main/docs/screenshot-welcome.png)
 
 ---
 
@@ -68,7 +68,7 @@ Now make a request in your client and watch traffic appear live.
 ## Terminal UI
 
 <!-- SCREENSHOT: run `mcp-spy -t 3001 --name filesystem` after some traffic — shows the full TUI with log list on left and payload inspector on right -->
-![MCP-SPY Live TUI](./docs/screenshot-tui.png)
+![MCP-SPY Live TUI](https://raw.githubusercontent.com/gabsalvo/mcp-spy-tui/main/docs/screenshot-tui.png)
 
 The TUI has two panels:
 
@@ -87,7 +87,7 @@ The TUI has two panels:
 ### cURL export
 
 <!-- SCREENSHOT: press `c` in the TUI — shows the cURL export panel for a selected request -->
-![cURL Export View](./docs/screenshot-curl.png)
+![cURL Export View](https://raw.githubusercontent.com/gabsalvo/mcp-spy-tui/main/docs/screenshot-curl.png)
 
 Press `c` on any selected request to get a ready-to-paste `curl` command you can replay in a terminal or import into Postman.
 
