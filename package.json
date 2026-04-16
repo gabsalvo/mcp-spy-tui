@@ -1,0 +1,50 @@
+{
+  "name": "mcp-spy-proxy",
+  "version": "1.0.2",
+  "description": "Zero-config local observability proxy for the Model Context Protocol (MCP). Intercept, inspect, replay and share MCP traffic in real time.",
+  "main": "src/index.js",
+  "bin": {
+    "mcp-spy": "src/index.js"
+  },
+  "files": [
+    "src",
+    "docs"
+  ],
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "proxy",
+    "observability",
+    "debugging",
+    "claude",
+    "llm",
+    "ai",
+    "tui"
+  ],
+  "author": "gabsalvo <hello@gabsalvo.com> (https://gabsalvo.com)",
+  "license": "MIT",
+  "homepage": "https://mcpspy.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gabsalvo/mcpspy.dev"
+  },
+  "bugs": {
+    "url": "https://github.com/gabsalvo/mcpspy.dev/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.4.3",
+    "commander": "^12.0.0",
+    "express": "^4.18.2",
+    "http-proxy-middleware": "^2.0.6",
+    "ink": "^7.0.0",
+    "ink-table": "^3.1.0",
+    "react": "^19.2.5"
+  }
+}

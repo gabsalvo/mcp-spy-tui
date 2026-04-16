@@ -1,0 +1,7 @@
+# Dev / test files
+example-server.js
+*.log
+
+# Never ship env files
+.env
+.env.*
