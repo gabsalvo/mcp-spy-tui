@@ -357,7 +357,7 @@ function StatsBar({ logs, targetPort, serverFilter }) {
     borderStyle: 'single',
     borderColor: 'gray',
     paddingX: 1,
-    gap: 2,
+    gap: 1,
     flexWrap: 'wrap',
   },
     // Logo
@@ -394,14 +394,14 @@ function StatsBar({ logs, targetPort, serverFilter }) {
         )
       : null,
     totalTokens > 0 ? h(Text, { color: 'gray' }, '│') : null,
-    // Server filter
+    // Server filter (only shown while filtering, to keep the bar on one line)
     serverFilter !== 'all'
       ? h(Text, null,
           h(Text, { color: 'gray' }, 'filter: '),
           h(Text, { color: 'magentaBright', bold: true }, serverFilter),
         )
-      : h(Text, { color: 'gray' }, 'all servers'),
-    h(Text, { color: 'gray' }, '│'),
+      : null,
+    serverFilter !== 'all' ? h(Text, { color: 'gray' }, '│') : null,
     h(Text, { color: 'gray' }, 'free & open source · mcpspy.dev'),
     h(Text, { color: 'gray' }, '│'),
     // Shortcuts
@@ -480,8 +480,9 @@ function App({ targetPort, serverName }) {
   return h(Box, { flexDirection: 'column', width: '100%' },
     h(StatsBar, { logs, targetPort, serverFilter }),
     h(Box, { flexDirection: 'row', flexGrow: 1 },
-      // Left: log list
-      h(Box, { flexDirection: 'column', width: 76, borderStyle: 'single', borderColor: 'gray' },
+      // Left: log list — width must fit the LogRow columns (79 cols + borders);
+      // flexShrink 0 so the detail pane's long JSON lines can't crush the list
+      h(Box, { flexDirection: 'column', width: 82, flexShrink: 0, borderStyle: 'single', borderColor: 'gray' },
         h(ColumnHeader, null),
         visibleLogs.length === 0
           ? h(Box, { padding: 1, flexDirection: 'column', gap: 1 },
