@@ -4,6 +4,7 @@ import { startProxy } from './proxy.js';
 import { startApiServer } from './api.js';
 import { startTUI, startStandaloneTUI } from './tui.js';
 import { runTests } from './runner.js';
+import { version } from './version.js';
 
 // Options after a subcommand belong to the subcommand — without this, the main
 // program's -t/--target steals the flag from `mcp-spy test -t <port>`.
@@ -32,7 +33,7 @@ program
 program
   .name('mcp-spy')
   .description('The Visual Debugger & Proxy for MCP')
-  .version('1.1.0')
+  .version(version)
   .option('-t, --target <port>', 'Target port of the MCP server')
   .option('-n, --name <label>', 'Label for this MCP server (e.g. "filesystem", "github")')
   .option('--redact-pii', 'Auto-redact secrets (AWS keys, tokens, emails) before saving')

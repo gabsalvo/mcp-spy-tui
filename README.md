@@ -5,7 +5,7 @@
 
 Browser devtools, but for AI tool calls. No account. No cloud. No telemetry.
 
-![mcp-spy live TUI](https://raw.githubusercontent.com/gabsalvo/mcp-spy-tui/main/docs/screenshot-tui.png)
+![mcp-spy — run npx mcp-spy for a guided setup](https://raw.githubusercontent.com/gabsalvo/mcp-spy-tui/main/docs/screenshot-welcome.png)
 
 ---
 
@@ -69,6 +69,8 @@ Now make a request in your client and watch traffic appear live.
 ---
 
 ## Terminal UI
+
+![mcp-spy live TUI](https://raw.githubusercontent.com/gabsalvo/mcp-spy-tui/main/docs/screenshot-tui.png)
 
 The TUI has two panels:
 

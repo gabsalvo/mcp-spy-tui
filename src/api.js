@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import db from './db.js';
+import { version } from './version.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,7 +27,7 @@ export function startApiServer(targetPort) {
 
   // Health check — lets local tools detect that the CLI is running
   app.get('/api/health', (req, res) => {
-    res.json({ ok: true, port: targetPort, version: '1.1.0' });
+    res.json({ ok: true, port: targetPort, version });
   });
 
   // Logs endpoint
