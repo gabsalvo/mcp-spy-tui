@@ -1,6 +1,5 @@
 import React, { useState, useEffect, createElement as h } from 'react';
 import { render, Box, Text, useInput, useApp } from 'ink';
-import { execSync } from 'child_process';
 import db from './db.js';
 import { toCurl } from './export.js';
 import { fmtTokens } from './tokens.js';
@@ -67,63 +66,6 @@ function Banner() {
   );
 }
 
-// ── Subscription Screen ────────────────────────────────────────────────────
-
-function SubscriptionScreen({ onAccept, onDecline }) {
-  const { exit } = useApp();
-
-  useInput((input, key) => {
-    if (input === 'q' || (key.ctrl && input === 'c')) exit();
-    if (input === 'y' || key.return) onAccept();
-    if (input === 'n' || key.escape) onDecline();
-  });
-
-  return h(Box, { flexDirection: 'column', padding: 2, gap: 1 },
-    h(Banner, null),
-
-    h(Box, { borderStyle: 'round', borderColor: 'cyanBright', paddingX: 3, paddingY: 1, flexDirection: 'column', gap: 1 },
-      h(Text, { bold: true, color: 'cyanBright' }, '  Welcome to MCP-SPY Pro  '),
-      h(Text, { color: 'gray' }, '─────────────────────────────────────────────────────────────'),
-      h(Text, { color: 'white' }, 'The TUI is part of the Pro tier — here\'s what you unlock:'),
-      h(Text, null),
-      h(Box, { flexDirection: 'column', gap: 0, paddingLeft: 2 },
-        h(Text, null, h(Text, { color: 'greenBright' }, '  ✓ '), h(Text, { color: 'white' }, 'Real-time TUI — watch live MCP traffic as it happens')),
-        h(Text, null, h(Text, { color: 'greenBright' }, '  ✓ '), h(Text, { color: 'white' }, 'Cloud Sync — every call saved to your web dashboard')),
-        h(Text, null, h(Text, { color: 'greenBright' }, '  ✓ '), h(Text, { color: 'white' }, 'Shareable trace permalinks — send a URL, not a screenshot')),
-        h(Text, null, h(Text, { color: 'greenBright' }, '  ✓ '), h(Text, { color: 'white' }, 'Token profiling — see which tool calls eat your context window')),
-        h(Text, null, h(Text, { color: 'greenBright' }, '  ✓ '), h(Text, { color: 'white' }, 'PII auto-redaction & Mock mode for safe CI pipelines')),
-        h(Text, null, h(Text, { color: 'greenBright' }, '  ✓ '), h(Text, { color: 'white' }, 'cURL / Postman export from any captured request')),
-      ),
-      h(Text, null),
-      h(Box, { gap: 2 },
-        h(Text, { color: 'gray' }, '  Price:'),
-        h(Text, { color: 'white', bold: true }, '$12.50/mo'),
-        h(Text, { color: 'gray' }, 'billed annually  ·  $15/mo monthly'),
-      ),
-    ),
-
-    h(Box, { borderStyle: 'round', borderColor: 'blue', paddingX: 3, paddingY: 1, flexDirection: 'column', gap: 0 },
-      h(Text, null,
-        h(Text, { color: 'white' }, '  → '),
-        h(Text, { bold: true, color: 'cyanBright' }, '[Y] '),
-        h(Text, { color: 'white' }, 'Open '),
-        h(Text, { color: 'cyanBright', bold: true }, 'mcpspy.dev/pricing'),
-        h(Text, { color: 'white' }, ' in your browser'),
-      ),
-      h(Text, null,
-        h(Text, { color: 'white' }, '  → '),
-        h(Text, { bold: true, color: 'yellow' }, '[N] '),
-        h(Text, { color: 'white' }, 'Skip for now — run the guided setup instead'),
-      ),
-      h(Text, null,
-        h(Text, { color: 'white' }, '  → '),
-        h(Text, { bold: true, color: 'gray' }, '[Q] '),
-        h(Text, { color: 'gray' }, 'Quit'),
-      ),
-    ),
-  );
-}
-
 // ── Guided Setup Wizard ────────────────────────────────────────────────────
 
 const SETUP_STEPS = [
@@ -153,12 +95,6 @@ const SETUP_STEPS = [
       'Open another terminal and run:',
       '',
       '  npx mcp-spy -t 3001 --name filesystem',
-      '',
-      'Or with cloud sync (Pro):',
-      '',
-      '  npx mcp-spy -t 3001 --name filesystem --sync mcp_live_XXXX...',
-      '',
-      'Your API key is at: mcpspy.dev/dashboard → Settings',
     ],
   },
   {
@@ -204,8 +140,7 @@ const SETUP_STEPS = [
       '  c         toggle cURL export view',
       '  q         quit',
       '',
-      'Pro users also get every call saved to mcpspy.dev/dashboard',
-      'with full token analytics, shareable trace links, and replay.',
+      'mcp-spy is free & open source — mcpspy.dev',
       '',
       'Happy debugging! — gabsalvo.com',
     ],
@@ -276,35 +211,6 @@ function SetupWizard() {
       h(Text, null, h(Text, { color: 'gray' }, '['), h(Text, { color: 'gray', bold: true }, 'Q'), h(Text, { color: 'gray' }, '] quit')),
     ),
   );
-}
-
-// ── Standalone Entry (no --target) ─────────────────────────────────────────
-
-function StandaloneApp() {
-  const [screen, setScreen] = useState('subscription'); // 'subscription' | 'setup'
-
-  const handleAccept = () => {
-    // Open pricing page in browser
-    const url = 'https://mcpspy.dev/pricing';
-    try {
-      const cmd = process.platform === 'win32'
-        ? `start ${url}`
-        : process.platform === 'darwin'
-          ? `open ${url}`
-          : `xdg-open ${url}`;
-      execSync(cmd, { stdio: 'ignore' });
-    } catch { /* ignore */ }
-    setScreen('setup');
-  };
-
-  const handleDecline = () => {
-    setScreen('setup');
-  };
-
-  if (screen === 'subscription') {
-    return h(SubscriptionScreen, { onAccept: handleAccept, onDecline: handleDecline });
-  }
-  return h(SetupWizard, null);
 }
 
 // ── LogRow ─────────────────────────────────────────────────────────────────
@@ -439,7 +345,7 @@ function DetailPane({ log, showCurl, targetPort }) {
 
 // ── StatsBar ───────────────────────────────────────────────────────────────
 
-function StatsBar({ logs, targetPort, syncKey, serverFilter }) {
+function StatsBar({ logs, targetPort, serverFilter }) {
   const visibleLogs = serverFilter === 'all' ? logs : logs.filter(l => l.server_name === serverFilter);
   const errors = visibleLogs.filter(l => l.status >= 400).length;
   const avgDuration = visibleLogs.length
@@ -449,7 +355,7 @@ function StatsBar({ logs, targetPort, syncKey, serverFilter }) {
 
   return h(Box, {
     borderStyle: 'single',
-    borderColor: syncKey ? 'cyanBright' : 'gray',
+    borderColor: 'gray',
     paddingX: 1,
     gap: 2,
     flexWrap: 'wrap',
@@ -496,10 +402,7 @@ function StatsBar({ logs, targetPort, syncKey, serverFilter }) {
         )
       : h(Text, { color: 'gray' }, 'all servers'),
     h(Text, { color: 'gray' }, '│'),
-    // Sync status
-    syncKey
-      ? h(Text, { color: 'cyanBright', bold: true }, '✨ PRO SYNC')
-      : h(Text, { color: 'gray' }, 'free · mcpspy.dev/pricing'),
+    h(Text, { color: 'gray' }, 'free & open source · mcpspy.dev'),
     h(Text, { color: 'gray' }, '│'),
     // Shortcuts
     h(Text, { color: 'gray', dimColor: true }, '↑↓ nav  s srv  c cURL  q quit'),
@@ -527,7 +430,7 @@ function ColumnHeader() {
 
 // ── Main App ───────────────────────────────────────────────────────────────
 
-function App({ targetPort, syncKey, serverName }) {
+function App({ targetPort, serverName }) {
   const { exit } = useApp();
   const [logs, setLogs] = useState([]);
   const [selectedIdx, setSelectedIdx] = useState(0);
@@ -575,7 +478,7 @@ function App({ targetPort, syncKey, serverName }) {
   });
 
   return h(Box, { flexDirection: 'column', width: '100%' },
-    h(StatsBar, { logs, targetPort, syncKey, serverFilter }),
+    h(StatsBar, { logs, targetPort, serverFilter }),
     h(Box, { flexDirection: 'row', flexGrow: 1 },
       // Left: log list
       h(Box, { flexDirection: 'column', width: 76, borderStyle: 'single', borderColor: 'gray' },
@@ -606,10 +509,10 @@ function App({ targetPort, syncKey, serverName }) {
 
 // ── Exports ────────────────────────────────────────────────────────────────
 
-export function startTUI(targetPort, syncKey, serverName) {
-  render(h(App, { targetPort, syncKey, serverName }));
+export function startTUI(targetPort, serverName) {
+  render(h(App, { targetPort, serverName }));
 }
 
 export function startStandaloneTUI() {
-  render(h(StandaloneApp, null));
+  render(h(SetupWizard, null));
 }

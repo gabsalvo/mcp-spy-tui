@@ -5,7 +5,7 @@ import db from './db.js';
 import { redact } from './redact.js';
 import { estimateTokens } from './tokens.js';
 
-export function startProxy(targetPort, syncKey, serverName = 'default', options = {}) {
+export function startProxy(targetPort, serverName = 'default', options = {}) {
   const { redactPii = false, mockMode = false } = options;
 
   const app = express();
@@ -118,31 +118,6 @@ export function startProxy(targetPort, syncKey, serverName = 'default', options 
             );
           } catch (dbErr) {
             console.error('❌ Failed to save log to database:', dbErr.message);
-          }
-
-          // Cloud sync
-          const isJsonRpc = method !== 'unknown';
-          if (syncKey && isJsonRpc) {
-            const convexSiteUrl = process.env.CONVEX_SITE_URL || 'https://quaint-mink-330.eu-west-1.convex.site';
-            fetch(`${convexSiteUrl}/ingest`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${syncKey}`,
-              },
-              body: JSON.stringify({
-                method,
-                requestPayload: requestBody,
-                responsePayload: responseBody,
-                durationMs: duration_ms,
-                status: proxyRes.statusCode,
-                timestamp: req.startTime,
-                serverName,
-                tokenCountReq,
-                tokenCountRes,
-                wasRedacted,
-              }),
-            }).catch(err => console.error('❌ Cloud sync failed:', err.message));
           }
 
           return responseBuffer;

@@ -12,11 +12,10 @@ export function startApiServer(targetPort) {
 
   app.use(express.json());
 
-  // CORS — allow the mcpspy.dev dashboard and localhost dev to call this
+  // CORS — allow local tools (e.g. a UI on localhost) to call this
   app.use((req, res, next) => {
     const origin = req.headers.origin || '';
-    const allowed = ['https://mcpspy.dev', 'http://localhost:3000', 'http://localhost:3001'];
-    if (allowed.includes(origin) || origin.startsWith('http://localhost')) {
+    if (origin.startsWith('http://localhost')) {
       res.header('Access-Control-Allow-Origin', origin);
     }
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -25,9 +24,9 @@ export function startApiServer(targetPort) {
     next();
   });
 
-  // Health check — dashboard pings this to know the CLI is running
+  // Health check — lets local tools detect that the CLI is running
   app.get('/api/health', (req, res) => {
-    res.json({ ok: true, port: targetPort, version: '1.0.0' });
+    res.json({ ok: true, port: targetPort, version: '1.1.0' });
   });
 
   // Logs endpoint

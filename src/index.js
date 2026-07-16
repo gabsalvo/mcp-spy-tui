@@ -5,6 +5,10 @@ import { startApiServer } from './api.js';
 import { startTUI, startStandaloneTUI } from './tui.js';
 import { runTests } from './runner.js';
 
+// Options after a subcommand belong to the subcommand — without this, the main
+// program's -t/--target steals the flag from `mcp-spy test -t <port>`.
+program.enablePositionalOptions();
+
 // ── TEST SUBCOMMAND ────────────────────────────────────────────────────────
 program
   .command('test')
@@ -31,7 +35,6 @@ program
   .version('1.1.0')
   .option('-t, --target <port>', 'Target port of the MCP server')
   .option('-n, --name <label>', 'Label for this MCP server (e.g. "filesystem", "github")')
-  .option('-s, --sync <api_key>', 'Pro: Sync logs to cloud dashboard')
   .option('--redact-pii', 'Auto-redact secrets (AWS keys, tokens, emails) before saving')
   .option('--mock', 'Mock mode: return saved responses instead of forwarding to server')
   .option('--no-tui', 'Disable the TUI and use plain console output instead')
@@ -44,7 +47,7 @@ program
 
     const serverName = options.name || `port-${options.target}`;
 
-    startProxy(options.target, options.sync, serverName, {
+    startProxy(options.target, serverName, {
       redactPii: !!options.redactPii,
       mockMode: !!options.mock,
     });
@@ -52,7 +55,7 @@ program
     startApiServer(options.target);
 
     if (options.tui) {
-      startTUI(options.target, options.sync, serverName);
+      startTUI(options.target, serverName);
     } else {
       console.log('');
       console.log('\x1b[36m>>> MCP-Spy Proxy\x1b[0m');
@@ -61,13 +64,6 @@ program
 
       if (options.mock)     console.log('\x1b[35m [🎭] MOCK MODE — real server will NOT be called\x1b[0m');
       if (options.redactPii) console.log('\x1b[33m [🔒] PII auto-redaction ON\x1b[0m');
-
-      if (options.sync) {
-        console.log('\x1b[35m [PRO] Cloud sync enabled\x1b[0m');
-      } else {
-        console.log('\x1b[33m [!] Cloud Sync Disabled. (Free Tier)\x1b[0m');
-        console.log('\x1b[33m     → Upgrade at https://mcpspy.dev/pricing\x1b[0m');
-      }
 
       console.log('\x1b[32m [√] Database ready (WAL mode)\x1b[0m');
       console.log('\x1b[90m======================================\x1b[0m');

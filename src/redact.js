@@ -1,5 +1,5 @@
 // Auto-redaction middleware — strips common secrets from payload strings
-// before they are saved to SQLite or synced to the cloud.
+// before they are saved to SQLite.
 
 const PATTERNS = [
   // AWS access keys

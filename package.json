@@ -1,7 +1,7 @@
 {
-  "name": "mcp-spy-proxy",
-  "version": "1.0.2",
-  "description": "Zero-config local observability proxy for the Model Context Protocol (MCP). Intercept, inspect, replay and share MCP traffic in real time.",
+  "name": "mcp-spy",
+  "version": "1.1.0",
+  "description": "Free & open-source observability proxy for the Model Context Protocol (MCP). Intercept, inspect and replay MCP traffic in real time — right in your terminal.",
   "main": "src/index.js",
   "bin": {
     "mcp-spy": "src/index.js"
@@ -30,10 +30,10 @@
   "homepage": "https://mcpspy.dev",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gabsalvo/mcpspy.dev"
+    "url": "https://github.com/gabsalvo/mcp-spy-tui"
   },
   "bugs": {
-    "url": "https://github.com/gabsalvo/mcpspy.dev/issues"
+    "url": "https://github.com/gabsalvo/mcp-spy-tui/issues"
   },
   "engines": {
     "node": ">=18"
